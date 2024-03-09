@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>DOMMatrix Performance Test</title>
+<style type="text/css">
+  table, th, td {
+    border: 1px solid black;
+  }
+</style>
+<script type="module" src="/src/main.ts"></script>
+</head>
+<script>
+function generalTest(time) {
+  const start = performance.now();
+  const p = [100, 200];
+  const c = [50, 50];
+  const r = 30;
+
+  for(i = 0; i < time; i++) {
+    generalRotatePoint(p, c, r)
+  }
+  const duration = performance.now() - start;
+
+  return duration + "ms";
+}
+
+function nativeTest(time) {
+  const start = performance.now();
+  const p = [100, 200];
+  const c = [50, 50];
+  const r = 30;
+
+  for(i = 0; i < time; i++) {
+    nativeRotatePoint(p, c, r)
+  }
+  const duration = performance.now() - start;
+
+  return duration + "ms";
+}
+
+function native2Test(time) {
+  const start = performance.now();
+  const p = [100, 200];
+  const c = [50, 50];
+  const r = 30;
+  const m = new DOMMatrix().translateSelf(...c).rotateSelf(r).translateSelf(-c[0], -c[1]);
+
+  for(i = 0; i < time; i++) {
+    native2RotatePoint(p, m)
+  }
+  const duration = performance.now() - start;
+
+  return duration + "ms";
+}
+
+function runTest() {
+  document.getElementById("native_10").innerHTML = nativeTest(10);
+  document.getElementById("native_100").innerHTML = nativeTest(100);
+  document.getElementById("native_1000").innerHTML = nativeTest(1000);
+  document.getElementById("native_10000").innerHTML = nativeTest(10000);
+  document.getElementById("native_100000").innerHTML = nativeTest(100000);
+  // document.getElementById("native_1000000").innerHTML = nativeTest(1000000);
+
+  document.getElementById("native2_10").innerHTML = native2Test(10);
+  document.getElementById("native2_100").innerHTML = native2Test(100);
+  document.getElementById("native2_1000").innerHTML = native2Test(1000);
+  document.getElementById("native2_10000").innerHTML = native2Test(10000);
+  document.getElementById("native2_100000").innerHTML = native2Test(100000);
+  // document.getElementById("native2_1000000").innerHTML = native2Test(1000000);
+
+  document.getElementById("general_10").innerHTML = generalTest(10);
+  document.getElementById("general_100").innerHTML = generalTest(100);
+  document.getElementById("general_1000").innerHTML = generalTest(1000);
+  document.getElementById("general_10000").innerHTML = generalTest(10000);
+  document.getElementById("general_100000").innerHTML = generalTest(100000);
+  // document.getElementById("general_1000000").innerHTML = generalTest(1000000);
+}
+
+</script>
+
+<body>
+  <h1>DOMMatrix Performance Test</h1>
+  <input type="button" value="Run Test" onclick="runTest()">
+  <br>
+  <table>
+    <tr>
+      <th>count</th>
+      <th>General</th>
+      <th>Native</th>
+      <th>Native Matrix Batch</th>
+    </tr>
+    <tr>
+      <th>10</th>
+      <th id="general_10"></th>
+      <th id="native_10" class="native"></th>
+      <th id="native2_10" class="native"></th>
+    </tr>
+    <tr>
+      <th>100</th>
+      <th id="general_100"></th>
+      <th id="native_100" class="native"></th>
+      <th id="native2_100" class="native"></th>
+    </tr>
+    <tr>
+      <th>1000</th>
+      <th id="general_1000"></th>
+      <th id="native_1000" class="native"></th>
+      <th id="native2_1000" class="native"></th>
+    </tr>
+    <tr>
+      <th>10000</th>
+      <th id="general_10000"></th>
+      <th id="native_10000" class="native"></th>
+      <th id="native2_10000" class="native"></th>
+    </tr>
+    <tr>
+      <th>100000</th>
+      <th id="general_100000"></th>
+      <th id="native_100000" class="native"></th>
+      <th id="native2_100000" class="native"></th>
+    </tr>
+    <tr>
+      <th>1000000</th>
+      <th id="general_1000000"></th>
+      <th id="native_1000000" class="native"></th>
+      <th id="native2_1000000" class="native"></th>
+    </tr>
+  </table>
+
+</body>
+
+</html>
